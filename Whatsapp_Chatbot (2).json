@@ -1,0 +1,528 @@
+{
+  "name": "Whatsapp_Chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "63322f63-263b-440b-8f9c-xxxxxx4XXXXX",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1320,
+        -40
+      ],
+      "id": "***************XXX",
+      "name": "Webhook",
+      "webhookId": "***************XXX"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "1. Patient Initiates (General Inquiry)\nPatient:\nHi, I want to book an appointment.\nReceptionist: Before booking an appointment, please can you provide us with your :\n  1.1. Name \n  1.2. Contact number? (Make sure the user types both the info in one message and not separately)\nPatient: Provided the details. ( if provided don’t ask it again for any further query)\nReceptionist: Thanks for providing the details. Of course! We offer a 1500 consultation that includes a detailed 3D scan and expert evaluation with Dr. Khushal. You can see available slots and book instantly using this link:\nhttps://kivihealth.com/iam/khushal.gangwani.e5bicj7h6014\nLet me know if you face any issues with booking.\n\n 2. Dont ask their name and contact info if they are just greeting or asking normal G.K questions.\n\n\n3. Treatment-Specific Scripts ( Whats the price of [Treatment] ?)\n\n(a) Cleanup / Scaling / Dental Spa / Teeth Cleaning / Tooth Cleaning\nReceptionist: Teeth cleaning charges vary between ₹2000 to ₹5000 depending on the amount of tartar and number of sittings. We recommend starting with a ₹1500 consultation so Dr. Khushal can evaluate and suggest the best cleaning plan. https://kivihealth.com/iam/khushal.gangwani.e5bicj7h6014\n\n(b) Root Canal / Root Canal Treatment / RCT / Root Treatment\nReceptionist: Charges usually vary between ₹7000 to ₹10,000 depending on the type of tooth and number of sessions. We recommend starting with a ₹1500 consultation where Dr. Khushal will do a scan and suggest the best painless treatment plan. https://kivihealth.com/iam/khushal.gangwani.e5bicj7h6014\n\n(c) Dental Implant / Implant / Transplant\nReceptionist: Implant costs usually range from ₹30,000 to ₹45,000 depending on the brand of implant used. To assess if you're a suitable candidate, we offer a ₹1500 consultation that includes a 3D scan. https://kivihealth.com/iam/khushal.gangwani.e5bicj7h6014\n\n(d) Wisdom Tooth Removal / Wisdom Tooth Extraction / Wisdom Tooth Treatment\nReceptionist: Wisdom tooth removal ranges between ₹4000 to ₹10,000 depending on the tooth's position and whether it's a surgical or non-surgical procedure. We suggest starting with a ₹1500 consultation so Dr. Khushal can evaluate and advise the best Treatment plan. https://kivihealth.com/iam/khushal.gangwani.e5bicj7h6014\n\n(e) Teeth Whitening / Bleaching / Whitening / Instant Teeth Whitening / Zoom Whitening\nReceptionist: Whitening treatments range between ₹15,000 to ₹20,000 depending on cycles required and original tooth shade. We start with a ₹1500 consultation to evaluate and recommend the best Treatment plan. https://kivihealth.com/iam/khushal.gangwani.e5bicj7h6014\n\n(f) Filling / Dental Filling / Tooth Filling / Composite Filling / Tooth Restoration / Restoration / Cement Filling\nReceptionist: Filling costs usually range from ₹2000 to ₹6000 depending on the material used and area of the tooth. We recommend a ₹1500 consultation so Dr. Khushal can assess and guide you to the best Treatment plan. https://kivihealth.com/iam/khushal.gangwani.e5bicj7h6014\n\n\n\n\n4. When the Patient Is Hesitant\nPatient: I'll think about it.\nReceptionist:\nOf course! If and when you're ready, here's the link to book your 1500 consultation, no commitment.\njust expert guidance:\nhttps://kivihealth.com/iam/khushal.gangwani.e5bicj7h6014\n\n\n\n\n\n5. Final Closing Line ( After they said booking done, or given any confirmation of the task done)\nReceptionist:\nThank you for choosing OraMax Dental Clinic. We look forward to helping you smile with\nconfidence. For any queries, just reply here or book directly via the link above. Have a great day!\n\n6.Don’t ask repetitive questions and if provided their name and contact number check in the memory and don’t ask it again !\n\n\n\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        -628,
+        -40
+      ],
+      "id": "***************XXX",
+      "name": "AI Agent",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.gupshup.io/wa/api/v1/msg",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "{{ $env.GUPSHUP_API_KEY }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "channel",
+              "value": "whatsapp"
+            },
+            {
+              "name": "source",
+              "value": "9188502462XX"
+            },
+            {
+              "name": "destination",
+              "value": "={{ $('Code').item.json.userPhone }}"
+            },
+            {
+              "name": "src.name",
+              "value": "Oramax25"
+            },
+            {
+              "name": "message",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        396,
+        60
+      ],
+      "id": "***************XXX",
+      "name": "HTTP Request",
+      "retryOnFail": false,
+      "maxTries": null,
+      "waitBetweenTries": 0,
+      "executeOnce": true,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Code').item.json.sessionId }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -540,
+        180
+      ],
+      "id": "***************XXX",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Search the dental clinic knowledge base for comprehensive information about treatments, procedures, costs, doctor credentials, clinic services, appointment booking, and patient care instructions. This tool contains all the clinic's service details, pricing, and procedures. Use this tool for ANY dental-related questions including treatment options, costs, booking procedures, and clinic information.",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "clientscript",
+          "mode": "list",
+          "cachedResultName": "clientscript"
+        },
+        "topK": 8,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -420,
+        182.5
+      ],
+      "id": "***************XXX",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "***************XXX",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -332,
+        380
+      ],
+      "id": "***************XXX",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "***************XXX",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -740,
+        180
+      ],
+      "id": "***************XXX",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "***************XXX",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Enhanced Code Node with Robust Deduplication\nconst inputData = $input.all();\n\n// Initialize global storage for processed messages\nif (!global.processedMessages) {\n  global.processedMessages = new Map(); // Use Map instead of Set for better control\n}\n\n// Clean up old messages (keep only messages from last 5 minutes)\nconst cleanupThreshold = 5 * 60 * 1000; // 5 minutes\nconst now = Date.now();\n\n// Remove old entries\nfor (const [key, timestamp] of global.processedMessages.entries()) {\n  if (now - timestamp > cleanupThreshold) {\n    global.processedMessages.delete(key);\n  }\n}\n\nreturn inputData.map(item => {\n  const data = item.json;\n  \n  // Extract message text from various possible locations\n  const messageText = data.body?.payload?.payload?.text || \n                     data.body?.payload?.text || \n                     data.body?.text || \n                     data.text || \n                     data.message ||\n                     data.body?.payload?.payload?.caption ||\n                     data.body?.payload?.caption;\n  \n  // Extract sender information\n  const senderInfo = data.body?.payload?.source || \n                    data.body?.source || \n                    data.source || \n                    data.from ||\n                    data.body?.payload?.sender;\n  \n  // Extract message ID (prefer the actual message ID from WhatsApp)\n  const messageId = data.body?.payload?.id || \n                   data.body?.id || \n                   data.id || \n                   data.body?.payload?.payload?.id;\n  \n  // Create a robust unique key (without timestamp to avoid duplicates)\n  const uniqueKey = `${messageId}_${senderInfo}_${messageText}`;\n  \n  // Check if we've processed this exact message recently\n  const lastProcessedTime = global.processedMessages.get(uniqueKey);\n  const timeSinceLastProcess = lastProcessedTime ? now - lastProcessedTime : Infinity;\n  \n  // If message was processed within last 30 seconds, it's a duplicate\n  if (timeSinceLastProcess < 30000) {\n    console.log(`Duplicate message detected and blocked: ${uniqueKey}`);\n    console.log(`Last processed: ${timeSinceLastProcess}ms ago`);\n    \n    // Return null to filter out this item\n    return null;\n  }\n  \n  // Mark this message as processed with current timestamp\n  global.processedMessages.set(uniqueKey, now);\n  \n  // Create session ID for memory (use phone number for consistency)\n  const sessionId = senderInfo || `session_${messageId}`;\n  \n  // Enhanced logging\n  console.log('Processing NEW message:', {\n    messageId,\n    uniqueKey,\n    messageText: messageText?.substring(0, 50) + '...', // Truncate for logs\n    senderInfo,\n    sessionId,\n    timestamp: new Date().toISOString(),\n    processedMessagesCount: global.processedMessages.size\n  });\n  \n  return {\n    json: {\n      chatInput: messageText,\n      userPhone: senderInfo,\n      sessionId: sessionId,\n      messageId: messageId,\n      uniqueKey: uniqueKey,\n      timestamp: new Date().toISOString(),\n      messageType: data.body?.payload?.type || 'text',\n      isDuplicate: false,\n      skipProcessing: false\n    }\n  };\n}).filter(item => item !== null); // Remove null items (duplicates)"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1100,
+        -40
+      ],
+      "id": "***************XXX",
+      "name": "Code",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const userPhone = $('Code').item.json.userPhone;  // Fixed: Changed from Code1 to Code\n  const chatInput = $('Code').item.json.chatInput;   // Fixed: Changed from Code1 to Code\n  const agentOutput = item.json.output;\n  \n  // Initialize extraction variables\n  let extractedName = null;\n  let extractedPhone = null;\n  \n  if (chatInput) {\n    const message = chatInput.toLowerCase().trim();\n    \n    // PHONE NUMBER EXTRACTION - Very flexible patterns\n    const phonePatterns = [\n      /(\\+?\\d{1,4}[\\s-]?\\d{10,14})/g,  // Any number with 10+ digits\n      /(\\d{10})/g,                      // Exactly 10 digits\n      /(\\d{4,5}[\\s-]?\\d{6})/g,         // 4-5 digits followed by 6 digits\n      /(\\d{3}[\\s-]?\\d{3}[\\s-]?\\d{4})/g // 3-3-4 format\n    ];\n    \n    // Extract ALL numbers from message\n    let phoneMatches = [];\n    phonePatterns.forEach(pattern => {\n      const matches = chatInput.match(pattern);\n      if (matches) {\n        phoneMatches = phoneMatches.concat(matches);\n      }\n    });\n    \n    // Find the best phone number (longest valid number)\n    if (phoneMatches.length > 0) {\n      phoneMatches.forEach(phone => {\n        const cleanPhone = phone.replace(/[\\s-()]/g, '');\n        if (cleanPhone.length >= 10 && cleanPhone.length <= 15) {\n          extractedPhone = cleanPhone;\n        }\n      });\n    }\n    \n    // NAME EXTRACTION - Super flexible patterns\n    const namePatterns = [\n      // Direct patterns with keywords\n      /(?:name|naam)[\\s:-]*([a-zA-Z\\s]+?)(?:\\s*(?:and|phone|contact|number|mobile|\\d)|$)/i,\n      /(?:my name is|i am|i'm)[\\s:-]*([a-zA-Z\\s]+?)(?:\\s*(?:and|phone|contact|number|mobile|\\d)|$)/i,\n      /(?:call me|naam hai)[\\s:-]*([a-zA-Z\\s]+?)(?:\\s*(?:and|phone|contact|number|mobile|\\d)|$)/i,\n      \n      // Simple name followed by number patterns\n      /^([a-zA-Z\\s]+?)\\s+(?:and\\s+)?(?:\\+?\\d)/i,\n      /^([a-zA-Z\\s]+?)\\s*,\\s*(?:\\+?\\d)/i,\n      \n      // Name anywhere in message (if contains both letters and numbers)\n      /([a-zA-Z]{2,}(?:\\s+[a-zA-Z]{2,})*)/g\n    ];\n    \n    // Try each pattern\n    for (let pattern of namePatterns) {\n      const matches = chatInput.match(pattern);\n      if (matches) {\n        if (pattern.global) {\n          // For global patterns, find the longest valid name\n          matches.forEach(match => {\n            const cleanName = match.replace(/[\\d\\s:-]/g, ' ').trim().replace(/\\s+/g, ' ');\n            if (cleanName.length > 2 && /^[a-zA-Z\\s]+$/.test(cleanName)) {\n              if (!extractedName || cleanName.length > extractedName.length) {\n                extractedName = cleanName;\n              }\n            }\n          });\n        } else {\n          // For non-global patterns, use first capture group\n          const cleanName = matches[1].trim().replace(/\\s+/g, ' ');\n          if (cleanName.length > 1 && /^[a-zA-Z\\s]+$/.test(cleanName)) {\n            extractedName = cleanName;\n            break;\n          }\n        }\n      }\n    }\n    \n    // FALLBACK: If we have numbers but no name found with patterns above\n    // Try to extract name from remaining text after removing numbers\n    if (!extractedName && extractedPhone) {\n      let remainingText = chatInput;\n      // Remove phone number from text\n      remainingText = remainingText.replace(extractedPhone, '');\n      // Remove common keywords\n      remainingText = remainingText.replace(/(?:phone|contact|number|mobile|naam|name|and|:-|:)/gi, '');\n      // Clean up and get remaining text\n      remainingText = remainingText.trim().replace(/\\s+/g, ' ');\n      \n      if (remainingText.length > 1 && /^[a-zA-Z\\s]+$/.test(remainingText)) {\n        extractedName = remainingText;\n      }\n    }\n    \n    // ANOTHER FALLBACK: Simple word extraction\n    if (!extractedName) {\n      const words = chatInput.split(/[\\s,:-]+/);\n      const nameWords = words.filter(word => \n        word.length > 1 && \n        /^[a-zA-Z]+$/.test(word) && \n        !['phone', 'contact', 'number', 'mobile', 'naam', 'name', 'and', 'my', 'is', 'me'].includes(word.toLowerCase())\n      );\n      \n      if (nameWords.length > 0) {\n        extractedName = nameWords.join(' ');\n      }\n    }\n  }\n  \n  // Final cleanup\n  if (extractedName) {\n    extractedName = extractedName.trim().replace(/\\s+/g, ' ');\n    // Capitalize first letter of each word\n    extractedName = extractedName.replace(/\\b\\w/g, l => l.toUpperCase());\n  }\n  \n  if (extractedPhone) {\n    extractedPhone = extractedPhone.replace(/[\\s-()]/g, '');\n  }\n  \n  // Validation\n  const isValidName = extractedName && extractedName.length > 1 && /^[a-zA-Z\\s]+$/.test(extractedName);\n  const isValidPhone = extractedPhone && extractedPhone.length >= 10 && /^\\+?\\d{10,15}$/.test(extractedPhone);\n  \n  const hasCompleteInfo = isValidName && isValidPhone;\n  \n  // Enhanced logging for debugging\n  console.log('=== EXTRACTION DEBUG ===');\n  console.log('Original Input:', chatInput);\n  console.log('Extracted Name:', extractedName);\n  console.log('Extracted Phone:', extractedPhone);\n  console.log('Name Valid:', isValidName);\n  console.log('Phone Valid:', isValidPhone);\n  console.log('Complete Info:', hasCompleteInfo);\n  console.log('========================');\n  \n  return {\n    json: {\n      ...item.json,\n      extractedName: isValidName ? extractedName : null,\n      extractedPhone: isValidPhone ? extractedPhone : null,\n      userPhone: userPhone,\n      hasCompleteInfo: hasCompleteInfo,\n      timestamp: new Date().toISOString(),\n      shouldStoreInSheets: hasCompleteInfo\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -44,
+        -40
+      ],
+      "id": "***************XXX",
+      "name": "Extract Name & Phone",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "condition-1",
+              "leftValue": "={{ $json.shouldStoreInSheets }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equal"
+              }
+            },
+            {
+              "id": "***************XXX",
+              "leftValue": "={{ $json.shouldStoreInSheets }}",
+              "rightValue": "=",
+              "operator": {
+                "type": "boolean",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -40
+      ],
+      "id": "***************XXX",
+      "name": "Check Complete Info",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1srgK5Fmwh9m1vy1XBhzajfJtOYf4ydwGy7m70ltNxNI",
+          "mode": "list",
+          "cachedResultName": "Appointment Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1srgK5Fmwh9m1vy1XBhzajfJtOYf4ydwGy7m70ltNxNI/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1srgK5Fmwh9m1vy1XBhzajfJtOYf4ydwGy7m70ltNxNI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $('Extract Name & Phone').item.json.extractedName }}",
+            "Phone": "={{ $('Extract Name & Phone').item.json.extractedPhone }}",
+            "Timestamp": "={{ $json.timestamp }}"
+          },
+          "matchingColumns": [
+            "Phone"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [
+        396,
+        -140
+      ],
+      "id": "***************XXX",
+      "name": "Store in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "***************XXX",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "***************XXX",
+              "leftValue": "={{$json.chatInput}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "***************XXX",
+              "leftValue": "={{$json.userPhone}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "***************XXX",
+              "leftValue": "={{$json.skipProcessing}}",
+              "rightValue": false,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -880,
+        -40
+      ],
+      "id": "***************XXX",
+      "name": "Filter",
+      "executeOnce": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Extract Name & Phone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Name & Phone": {
+      "main": [
+        [
+          {
+            "node": "Check Complete Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Complete Info": {
+      "main": [
+        [
+          {
+            "node": "Store in Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a40d5039-55f7-45d0-9dfa-128352xxxxxx",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "cffc24dba07c3778022c10e41c965f893f42252910c8f25f9d5151xxxxxxxxxx"
+  },
+  "id": "QJ0qtxxAxxxxxxxx",
+  "tags": []
+} 
